@@ -156,43 +156,37 @@ public class RunClustering {
 	}
 	public void execute(){
 		this.base = this.getSegments().size();
-		if (this.neatMode==1){
+		if (this.neatMode==1) {
 			this.totalTime = (System.nanoTime()-startTime)/1e6;
 			drawBaseClusters();
 			
 		} else {
-		
-		while (!this.segments.isEmpty()) mergeSegments();//flow-based clustering
-			 
-		
-		System.out.println("Number of clusters bf: "+this.segClus.size());
-		int avgNumOfTrajs=0;
-		for (int i=this.segClus.size()-1; i>=0;i--){
-			segClus.get(i).generateTrajList();
-			avgNumOfTrajs =+ segClus.get(i).getTrajList().size();
-		}
-		avgNumOfTrajs = Math.round(avgNumOfTrajs/this.segClus.size());
-		
-		
-		//Filtering clusters which has too few objects traveling on 
-		for (int i=this.segClus.size()-1; i>=0;i--){
-			 
-				if (segClus.get(i).getTrajList().size()<=avgNumOfTrajs)
-				segClus.remove(i);
-		
-		}
-		this.totalTime = (System.nanoTime()-startTime)/1e6;
-		this.flow=segClus.size();
-		System.out.println("The first phase takes "+(System.nanoTime()-startTime)/1e6+" milisecs");
-		System.out.println("Number of trajs: "+trajs.size());
-		System.out.println("Number of clusters after: "+this.segClus.size());
 
-		
-		optClusteringResult(eps);//final phase
-		drawMergedClusters();
-		}
-		
-		
+            while (!this.segments.isEmpty()) mergeSegments();//flow-based clustering
+
+
+            System.out.println("Number of clusters bf: " + this.segClus.size());
+            int avgNumOfTrajs = 0;
+            for (int i = this.segClus.size() - 1; i >= 0; i--) {
+                segClus.get(i).generateTrajList();
+                avgNumOfTrajs += segClus.get(i).getTrajList().size();
+            }
+            avgNumOfTrajs = Math.round(avgNumOfTrajs / this.segClus.size());
+
+            //Filtering clusters which has too few objects traveling on
+            for (int i = this.segClus.size() - 1; i >= 0; i--) {
+                if (segClus.get(i).getTrajList().size() < avgNumOfTrajs)
+                    segClus.remove(i);
+            }
+            this.totalTime = (System.nanoTime() - startTime) / 1e6;
+            this.flow = segClus.size();
+            System.out.println("The first phase takes " + (System.nanoTime() - startTime) / 1e6 + " milisecs");
+            System.out.println("Number of trajs: " + trajs.size());
+            System.out.println("Number of clusters after: " + this.segClus.size());
+
+            optClusteringResult(eps);//final phase
+            drawMergedClusters();
+        }
 	}
 	
 	public void optClusteringResult(double eps){
@@ -384,20 +378,18 @@ public class RunClustering {
 		return distanceList;
 	}
 	
-	public void  generateSegments(){
+	public void generateSegments(){
 
 		segments = new HashMap<Integer, PointsOnSeg>();
 		for (Trajectory myTraj : trajs){
 			for (PointsOnSeg pos : myTraj.getRoute()){
-				if (!segments.containsKey(pos.getSegid())){
+				if (!segments.containsKey(pos.getSegid())) {
 					segments.put(pos.getSegid(), pos);
-				}
-				else{
-					
+				} else {
 					segments.get(pos.getSegid()).add(pos);//add another t-frag to the base cluster
 				}
 				if (!segments.get(pos.getSegid()).getTrajIdList().contains(myTraj.getId())){
-				segments.get(pos.getSegid()).getTrajIdList().add(myTraj.getId());
+					segments.get(pos.getSegid()).getTrajIdList().add(myTraj.getId());
 				}
 			}
 			

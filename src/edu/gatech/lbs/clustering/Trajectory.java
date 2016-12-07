@@ -46,6 +46,7 @@ public class Trajectory {
 		ps0.getV().add(Points.get(0).getV());
 		Route.add(ps0);
 		for (int i=1;i<Points.size();i++){
+			// current segment != last segment
 			if (Points.get(i).getSegid()!=Points.get(i-1).getSegid()){
 				PointsOnSeg ps1 = new PointsOnSeg(Points.get(i).getSegid());
 				
@@ -53,9 +54,13 @@ public class Trajectory {
 				Route.add(ps1);
 			}
 			else{
-				if ((i<Points.size()-1)&&(Points.get(i).getSegid()!=Points.get(i+1).getSegid())) 
-				Route.getLast().getV().add(Points.get(i).getV());
-				if (i==Points.size()-1)Route.getLast().getV().add(Points.get(i).getV()); 
+				// next segment != current segment
+				if ((i<Points.size()-1)&&(Points.get(i).getSegid()!=Points.get(i+1).getSegid())) {
+					Route.getLast().getV().add(Points.get(i).getV());
+				}
+				if (i==Points.size()-1) {
+					Route.getLast().getV().add(Points.get(i).getV());
+				}
 			}
 		}
 	}
