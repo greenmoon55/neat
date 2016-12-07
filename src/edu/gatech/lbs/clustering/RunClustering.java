@@ -59,7 +59,7 @@ public class RunClustering {
 		this.concateCount =0;
 		if (this.neatMode <4){
 			ImportData im = new ImportData();
-			this.trajs = im.LoadTrajectories(traceFile);
+			this.trajs = im.LoadTrajectories(traceFile, roadmap);
 			
 			for (Trajectory myTraj : trajs){
 				myTraj.generateRoute();
@@ -234,9 +234,12 @@ public class RunClustering {
 		while (mySegClus.isExtensible()){
             PointsOnSeg[] ps = mySegClus.concatenateJuncs(roadmap, segments.values(),1,0,0);
             this.concateCount++;
-            if (ps[0]!=null)segments.remove(ps[0].getSegid());
+            if (ps[0]!=null) {
+                segments.remove(ps[0].getSegid());
+            }
             if (ps[1]!=null)segments.remove(ps[1].getSegid());
 		}
+		// mySegClus.print();
 		segClus.add(mySegClus);
 	}
 

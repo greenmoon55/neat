@@ -199,16 +199,19 @@ public class SegCluster {
 		
 		
 		
-		if (ps[0]==null) extendStart = false;
-		else {this.segments.addFirst(ps[0]);
-		this.startJunc = (ps[0].getRoadSeg(rm).getSourceJunction()==this.startJunc)? 
+		if (ps[0]==null) {
+			extendStart = false;
+		} else {
+			this.segments.addFirst(ps[0]);
+			this.startJunc = (ps[0].getRoadSeg(rm).getSourceJunction()==this.startJunc)?
 				ps[0].getRoadSeg(rm).getTargetJunction():ps[0].getRoadSeg(rm).getSourceJunction();
 		}
-		if (ps[1]==null) extendEnd = false;
-		else {
+		if (ps[1]==null) {
+			extendEnd = false;
+		} else {
 			this.segments.addLast(ps[1]);
 			this.endJunc = (ps[1].getRoadSeg(rm).getSourceJunction()==this.endJunc)? 
-			ps[1].getRoadSeg(rm).getTargetJunction():ps[1].getRoadSeg(rm).getSourceJunction();
+				ps[1].getRoadSeg(rm).getTargetJunction():ps[1].getRoadSeg(rm).getSourceJunction();
 		}
 		return ps;
 	}
@@ -292,6 +295,13 @@ public class SegCluster {
 		}
 		return length;
 	}
+	public void print() {
+        System.out.println(this.segments.size());
+        for (PointsOnSeg s: segments) {
+            System.out.println(s.getSegid());
+        }
+
+    }
 }
 
 

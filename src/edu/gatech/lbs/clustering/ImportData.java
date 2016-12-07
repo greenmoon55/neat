@@ -27,13 +27,16 @@ import java.net.URLConnection;
 import edu.gatech.lbs.core.FileHelper;
 import edu.gatech.lbs.core.vector.IVector;
 import edu.gatech.lbs.core.vector.CartesianVector;
+import edu.gatech.lbs.core.world.roadnet.RoadJunction;
+import edu.gatech.lbs.core.world.roadnet.RoadMap;
+import edu.gatech.lbs.core.world.roadnet.RoadSegment;
 
 public class ImportData {
 	protected HashMap<Integer,List<Integer>> trajIdClus;//list of trajId in each cluster
 	protected HashMap<Integer,List<Integer>> segIdClus;//list of segId in each cluster
 	
 public ImportData(){
-	trajIdClus =  new HashMap<Integer,List<Integer>>();
+	trajIdClus = new HashMap<Integer,List<Integer>>();
 	segIdClus = new HashMap<Integer,List<Integer>>();
 }
 public HashMap<Integer, List<Integer>> getTrajIdClus() {
@@ -43,7 +46,7 @@ public HashMap<Integer, List<Integer>> getTrajIdClus() {
 public HashMap<Integer, List<Integer>> getSegIdClus() {
 	return segIdClus;
 }
-public Collection<Trajectory> LoadTrajectories(String path) {
+public Collection<Trajectory> LoadTrajectories(String path, RoadMap roadmap) {
 	HashMap<Integer,Trajectory> trajectories = new HashMap<Integer,Trajectory>();
 	BufferedReader reader = null;
 	InputStream in = null;
@@ -63,19 +66,46 @@ public Collection<Trajectory> LoadTrajectories(String path) {
 
 	String line = null;
 	StringTokenizer tk = null;
-	
-	try {
+    int currentTrajId = 0;
+    int prevSegId = -1;
+    int prevOrigTrajId = -1;
+
+    try {
 		while ((line = reader.readLine()) != null) {
 			tk = new StringTokenizer(line, " ");
-			int trajId =  Integer.parseInt(tk.nextToken());
+
+			int origTrajId = Integer.parseInt(tk.nextToken());
+            int trajId;
+            if (prevOrigTrajId != origTrajId && prevOrigTrajId != -1) {
+                trajId = ++currentTrajId;
+            } else {
+                trajId = currentTrajId;
+            }
+            prevOrigTrajId = origTrajId;
+
 			int segId = Integer.parseInt(tk.nextToken());
+            if (segId != prevSegId && prevSegId != -1) {
+                RoadSegment currentSegment = roadmap.getRoadSegment(segId);
+                RoadSegment prevSegment = roadmap.getRoadSegment(prevSegId);
+                RoadJunction curSourceJunction = currentSegment.getSourceJunction();
+                RoadJunction curTargetJunction = currentSegment.getTargetJunction();
+                RoadJunction prevSourceJunction = prevSegment.getSourceJunction();
+                RoadJunction prevTargetJunction = prevSegment.getTargetJunction();
+                if (curSourceJunction.getId() != prevSourceJunction.getId()
+                        && curSourceJunction.getId() != prevTargetJunction.getId()
+                        && curTargetJunction.getId() != prevSourceJunction.getId()
+                        && curTargetJunction.getId() != prevTargetJunction.getId()) {
+                    trajId = ++currentTrajId;
+                }
+            }
+            prevSegId = segId;
+
 			double x = Double.parseDouble(tk.nextToken());
 			double y = Double.parseDouble(tk.nextToken());
 			CartesianVector v = new CartesianVector(x,y); 
 			Point p = new Point(segId,v);
 			
 			  if (!trajectories.containsKey(trajId)){
-				  
 				  Trajectory traj = new Trajectory(trajId);
 				  trajectories.put(trajId, traj);
 			  }
@@ -172,8 +202,8 @@ public Collection<List<IVector>> loadTraClusRe(String pathToFile){
 
 public static void main(String[] args) {
 	// TODO Auto-generated method stub
-	ImportData im = new ImportData();
-	Collection<Trajectory> t = im.LoadTrajectories("http://www.cc.gatech.edu/~bhan31/atl-500-3.txt");//http://www.cc.gatech.edu/projects/disl/courses/cs6675/summary-template.txt
-	System.out.print(Math.round(900/t.size()));
+	//ImportData im = new ImportData();
+	//Collection<Trajectory> t = im.LoadTrajectories("http://www.cc.gatech.edu/~bhan31/atl-500-3.txt");//http://www.cc.gatech.edu/projects/disl/courses/cs6675/summary-template.txt
+	//System.out.print(Math.round(900/t.size()));
 }
 }

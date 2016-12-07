@@ -54,8 +54,7 @@ public class MergedClustersDrawer implements IDrawer {
 				{g.setColor(getRandomColor(numGen));}
 			while(colorSet.contains(g.getColor()));
 			colorSet.add(g.getColor());
-			Collection<List<IVector>> trajs = clustering.representativeRoutes(myList,
-				clustering.getRoadmap());
+			Collection<List<IVector>> trajs = clustering.representativeRoutes(myList, clustering.getRoadmap());
 			for (List<IVector> traj : trajs){
 						
 				IDrawer trajDrawer = new TrajectoryDrawer(panel,traj,colorSet.get(colorSet.size()-1));
