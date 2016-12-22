@@ -37,7 +37,7 @@ public class RoadMap implements IWorld {
 
     this.isDirected = isDirected;
 
-    highestSegmentId = -1;
+    highestSegmentId = 0;
 
     bounds = new BoundingBox();
   }

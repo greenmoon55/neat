@@ -239,7 +239,7 @@ public class RunClustering {
             }
             if (ps[1]!=null)segments.remove(ps[1].getSegid());
 		}
-		// mySegClus.print();
+//		mySegClus.print(roadmap);
 		segClus.add(mySegClus);
 	}
 

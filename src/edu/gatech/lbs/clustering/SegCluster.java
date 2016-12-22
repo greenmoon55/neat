@@ -295,12 +295,20 @@ public class SegCluster {
 		}
 		return length;
 	}
-	public void print() {
+	public void print(RoadMap rm) {
         System.out.println(this.segments.size());
         for (PointsOnSeg s: segments) {
-            System.out.println(s.getSegid());
-        }
-
+			System.out.println(s.getSegid());
+            if (s.getSegid() == 20378) {
+				System.out.println("foundit");
+			}
+		}
+		List<IVector> points = representativePoints(rm);
+		for (IVector v: points) {
+			CartesianVector vec = v.toCartesianVector();
+			System.out.printf("(%f %f), ", vec.getY(), vec.getX());
+		}
+		System.out.println();
     }
 }
 

@@ -84,6 +84,9 @@ public Collection<Trajectory> LoadTrajectories(String path, RoadMap roadmap) {
             prevOrigTrajId = origTrajId;
 
 			int segId = Integer.parseInt(tk.nextToken());
+            if (roadmap.getRoadSegment(segId) == null) {
+                continue;
+            }
             if (segId != prevSegId && prevSegId != -1) {
                 RoadSegment currentSegment = roadmap.getRoadSegment(segId);
                 RoadSegment prevSegment = roadmap.getRoadSegment(prevSegId);

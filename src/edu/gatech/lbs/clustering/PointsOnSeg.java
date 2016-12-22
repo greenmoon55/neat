@@ -62,10 +62,12 @@ public class PointsOnSeg {
 		return true;
 		else return false;
 	}
-	public IVector getSharedJunction(RoadMap roadmap,PointsOnSeg neighborSeg){
+	public IVector getSharedJunction(RoadMap roadmap,PointsOnSeg neighborSeg) {
 		RoadSegment rs1= this.getRoadSeg(roadmap);
 		RoadSegment rs2= neighborSeg.getRoadSeg(roadmap);
-		if (rs1.getJunctionIndex(rs2.getSourceJunction())!=-1)return rs2.getSourceLocation();
+		if (rs1.getJunctionIndex(rs2.getSourceJunction())!=-1) {
+			return rs2.getSourceLocation();
+		}
 		else return rs2.getTargetLocation();
 	}
 	public boolean isEndPoint(RoadMap rm, RoadJunction junc){
